@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>OCR Sample</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-</head>
+    <title>Character Recognition</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 <body>
 
 <script type="text/javascript">
@@ -35,6 +35,8 @@
         var sourceImageUrl = document.getElementById("inputImage").value;
         document.querySelector("#sourceImage").src = sourceImageUrl;
 
+        $("#responseTextArea").html('Loading...');
+
         // Perform the REST API call.
         $.ajax({
             url: uriBase + "?" + $.param(params),
@@ -53,7 +55,7 @@
 
         .done(function(data) {
             // Show formatted JSON on webpage.
-            $("#responseTextArea").val(JSON.stringify(data, null, 2));
+            $("#responseTextArea").html(JSON.stringify(data, null, 2));
         })
 
         .fail(function(jqXHR, textStatus, errorThrown) {
@@ -66,22 +68,34 @@
     };
 </script>
 
-<h1>Character Recognition:</h1>
-<br><br>
-Image to read: <input type="text" name="inputImage" id="inputImage" value="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Atomist_quote_from_Democritus.png/338px-Atomist_quote_from_Democritus.png" />
-<button onclick="processImage()">Read image</button>
-<br><br>
-<div id="wrapper" style="width:1020px; display:table;">
-    <div id="jsonOutput" style="width:600px; display:table-cell;">
-        Response:
-        <br><br>
-        <textarea id="responseTextArea" class="UIInput" style="width:580px; height:400px;"></textarea>
+<main>
+    <div class="container">
+        <h1>Character Recognition:</h1>
+        <form onsubmit="processImage(); return false;">
+            <div class="form-inline">
+                <div class="form-group">
+                    <label class="control-label">Image to read: </label>
+                    <input type="text" class="form-control" name="inputImage" id="inputImage" value="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Atomist_quote_from_Democritus.png/338px-Atomist_quote_from_Democritus.png" />
+                </div>
+                <button class="btn btn-primary" type="submit">Read image</button>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6">
+                <div id="jsonOutput">
+                    <p>Response:</p>
+                    <pre id="responseTextArea" class="UIInput" style="height:400px;"></pre>
+                </div>    
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6">
+                <div id="imageDiv">
+                    <p>Source image:</p>
+                    <img id="sourceImage" style="width: 100%; object-fit: contain; height: 400px;" />
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="imageDiv" style="width:420px; display:table-cell;">
-        Source image:
-        <br><br>
-        <img id="sourceImage" width="400" />
-    </div>
-</div>
+</main>
+
 </body>
 </html>
