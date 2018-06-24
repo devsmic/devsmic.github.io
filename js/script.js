@@ -338,21 +338,32 @@ bullets.each(function (i, el) {
 	}
 });
 
+let currX = 0;
+
+var hammer = new Hammer(document.getElementById('cruise'));
+hammer.on('pan', (e) => {
+    if (e.additionalEvent === 'panright') {
+        currX += e.center.x;
+    } else if (e.additionalEvent === 'panleft') {
+        currX -= e.center.x;
+    }
+
+    if (isManualScrolling) {
+        isManualScrolling = false;
+        return;
+    }
+
+    clearInterval(intervalId);
+    pos = limit(0, currX / 800 ,203);
+    update(pos);
+    window.scrollTo(currX / 30, 0);
+});
+
 window.onscroll = function() {
-
-	if (isManualScrolling) {
-		isManualScrolling = false;
-		return;
-	}
-
-	if (isEnded) {
-		window.scrollTo(lastScrollX, 0);
-		return;
-	}
-
-	clearInterval(intervalId);
-	pos = limit(0, window.scrollX / 30 ,203);
-	update(pos);
+    if (isEnded) {
+        window.scrollTo(lastScrollX, 0);
+        return;
+    }
 };
 
 window.onbeforeunload = function() {
